@@ -1,0 +1,8 @@
+// src/styles/_variables.scss
+$primary-color: #1a202c;
+
+.recipe-card {
+  border: 1px solid $primary-color;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
