@@ -6,6 +6,11 @@ const Search = () => {
 
     const {ingredients, setIngredients} = useRecipeStore();
 
+function fetchIngredients() {
+ let inputValue = document.getElementById('ingredient-input').value;
+ setIngredients(inputValue);
+ fetchRecipes();
+}
 
     return (
         <Box
@@ -19,10 +24,9 @@ const Search = () => {
             flexDirection={{ base: "column", sm: "row" }}
         >
             <Input
+                id={"ingredient-input"}
                 colorScheme={"yellow"}
                 placeholder="Enter your ingredients"
-                value={ingredients} // Using Zustand store for ingredients
-                onChange={(e) => setIngredients(e.target.value)} // Update Zustand store when input changes
                 className="mb-2"
                 w={{ base: '300px', sm: "100%" }}
                 mx={"10px"}
@@ -31,7 +35,8 @@ const Search = () => {
                 w={{ base: '300px', sm: "40%" }}
                 mx={"10px"}
                 colorScheme="yellow"
-                onClick={fetchRecipes} // Call the function from recipeApi.js
+                onClick={fetchIngredients} // Call the function from recipeApi.js
+
             >
                 Find Recipes
             </Button>

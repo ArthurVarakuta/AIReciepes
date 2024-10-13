@@ -1,7 +1,5 @@
 import {
     Box,
-    Input,
-    Button,
     Divider,
     Text,
     Heading,
@@ -12,19 +10,20 @@ import {ChakraProvider} from '@chakra-ui/react';
 import RecipesResult from "./Components/RecipesResult.jsx";
 import useRecipeStore from '../storage.js'; // Import the Zustand store
 import {
-    createBrowserRouter,
-    RouterProvider,
+    BrowserRouter,
+    createBrowserRouter, Route,
+    RouterProvider, Routes,
 } from "react-router-dom";
 import Search from "./Components/Search.jsx";
 import ErrorPage from "./error-page.jsx";
 
-const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <RecipesResult></RecipesResult>,
-        errorElement:<ErrorPage></ErrorPage>,
-    }
-])
+// const router = createBrowserRouter([
+//     {
+//         path: '/',
+//         element: <RecipesResult></RecipesResult>,
+//         errorElement:<ErrorPage></ErrorPage>,
+//     }
+// ])
 
 function App() {
     const {recipes, ingredients, loading} = useRecipeStore(); // Access Zustand store
@@ -32,7 +31,7 @@ function App() {
     return (
         <ChakraProvider>
             <Box
-                h={"100VH"}
+                h={"100vh"}
                 backgroundColor={"yellow.100"}
                 display={"flex"}
                 flexDirection={"column"}
@@ -48,13 +47,20 @@ function App() {
                 <Search/>
 
 
-                <RouterProvider router={router}/>
-
+                {/*<RouterProvider router={router}/>*/}
+                <BrowserRouter>
+                    <main>
+                        <Routes>
+                            <Route path={'/'} element={<RecipesResult/>}  />
+                            {/*<Route path={"/:recipeBuffer.title"} element={}/>*/}
+                        </Routes>
+                    </main>
+                </BrowserRouter>
 
                 {loading ? (
-                    <VStack direction='column'><Spinner size={"xl"}/>Loading...</VStack>
+                    <VStack direction='column'><Spinner size={"xl"}/><Text>Loading...</Text></VStack>
                 ) : (
-                    recipes.length === 0 && ingredients.length !== 0 ? <Text>No recipes found</Text> : null
+                    (recipes.length === 0 && ingredients.length !== 0) && null
                 )}
             </Box>
         </ChakraProvider>
