@@ -11,11 +11,12 @@ import RecipesResult from "./Components/RecipesResult.jsx";
 import useRecipeStore from '../storage.js'; // Import the Zustand store
 import {
     BrowserRouter,
-    createBrowserRouter, Route,
-    RouterProvider, Routes,
+    Route,
+    Routes,
 } from "react-router-dom";
 import Search from "./Components/Search.jsx";
 import ErrorPage from "./error-page.jsx";
+import ListOfIngredients from "./Components/ListOfIngredients.jsx";
 
 // const router = createBrowserRouter([
 //     {
@@ -51,8 +52,8 @@ function App() {
                 <BrowserRouter>
                     <main>
                         <Routes>
-                            <Route path={'/'} element={<RecipesResult/>}  />
-                            {/*<Route path={"/:recipeBuffer.title"} element={}/>*/}
+                            <Route path={'/'} element={<RecipesResult/>}/>
+                            <Route path={"/:recipeBuffer.title"} element={<ListOfIngredients/>}/>
                         </Routes>
                     </main>
                 </BrowserRouter>
