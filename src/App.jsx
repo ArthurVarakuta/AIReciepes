@@ -1,44 +1,63 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { Box, Input, Button } from '@chakra-ui/react';
+import {
+    Box,
+    Input,
+    Button,
+    Divider,
+    Text,
+    Heading,
+    VStack,
+    Spinner
+} from '@chakra-ui/react';
+import {ChakraProvider} from '@chakra-ui/react';
+import RecipesResult from "./Components/RecipesResult.jsx";
+import useRecipeStore from '../storage.js'; // Import the Zustand store
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
+import Search from "./Components/Search.jsx";
+import ErrorPage from "./error-page.jsx";
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <RecipesResult></RecipesResult>,
+        errorElement:<ErrorPage></ErrorPage>,
+    }
+])
 
 function App() {
-    const [ingredients, setIngredients] = useState('');
-    const [recipes, setRecipes] = useState([]);
-    const fetchRecipes = async () => {
-        const apiKey = 'a3266fa69f164fc79c2159d3d55f4eb1';
-        try {
-            const response = await axios.get(
-                `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=5&apiKey=${apiKey}`
-            );
-            setRecipes(response.data);
-            console.log(response.data)
-        } catch (error) {
-            console.error('Error fetching the recipes:', error);
-        }
-    };
+    const {recipes, ingredients, loading} = useRecipeStore(); // Access Zustand store
 
     return (
-        <Box className="flex flex-col items-center p-4">
-            <h1 className="text-2xl mb-4">Recipe Finder</h1>
-            <Input
-                placeholder="Enter your ingredients"
-                value={ingredients}
-                onChange={(e) => setIngredients(e.target.value)}
-                className="mb-2"
-            />
-            <Button colorScheme="blue" onClick={fetchRecipes}>
-                Find Recipes
-            </Button>
-            <Box className="mt-4">
+        <ChakraProvider>
+            <Box
+                h={"100VH"}
+                backgroundColor={"yellow.100"}
+                display={"flex"}
+                flexDirection={"column"}
+                alignItems={"center"}
+                justifyContent={"start"}
+                colorScheme={"yellow"}
+                p-4
+            >
+                <Heading colorScheme={"yellow"} my={'10px'} className="text-2xl mb-4">
+                    Recipe Finder
+                </Heading>
+                <Divider borderBottom={"3px solid yellow "} mb={"30px"}></Divider>
+                <Search/>
 
-                {ingredients.length > 0  ? (recipes.map((recipe) => (
-                    <Box key={recipe.id} className="border p-4 mb-2">
-                        <h2 className="text-xl">{recipe.title}</h2>
-                        <img src={recipe.image} alt={recipe.title} />
-                    </Box>))):<h1>There are no receipes yet😒</h1>}
+
+                <RouterProvider router={router}/>
+
+
+                {loading ? (
+                    <VStack direction='column'><Spinner size={"xl"}/>Loading...</VStack>
+                ) : (
+                    recipes.length === 0 && ingredients.length !== 0 ? <Text>No recipes found</Text> : null
+                )}
             </Box>
-        </Box>
+        </ChakraProvider>
     );
 }
 
